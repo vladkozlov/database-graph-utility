@@ -17,7 +17,7 @@ from matplotlib.backends.backend_qt5agg import (
 
 UiMainWindow, QMainWindow = loadUiType('DatabaseGraphUtility.ui')
 
-defaultUserDir = 'C:\\Users\\zerogclub\\OneDrive\\Работа\\Tander\\data_analysis\\'
+defaultUserDir = 'C:\\'
 
 class Main(QMainWindow, UiMainWindow):
     def __init__(self, ):
