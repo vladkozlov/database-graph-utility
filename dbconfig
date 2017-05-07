@@ -1,0 +1,8 @@
+DRIVER|{SQLite3 ODBC Driver}
+SERVER|
+PORT|
+DATABASE|testdata\example.db
+UID|
+PWD|
+CUSTOMARGS|True
+CUSTOMLINE|DRIVER={SQLite3 ODBC Driver};DATABASE=testdata\example.db;OPTION=3
