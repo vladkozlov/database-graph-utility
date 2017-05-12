@@ -1,6 +1,7 @@
 from PyQt5.uic import loadUiType
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox 
+from PyQt5.QtGui import QIcon, QPixmap
 
 import pandas as pd
 import numpy as np
@@ -29,6 +30,7 @@ class Main(QMainWindow, UiMainWindow):
         self.isTableListingClicked = False
         self.label_gridSize.setHidden(True)
         self.lineEdit_gridSize.setHidden(True)
+        self.plainTextEdit_query.setTabStopWidth(4 * 4 * 2)
 
         self.toolButton_fileChoose.clicked.connect(self.handleFileChoose)
         self.pushButton_tableListing.clicked.connect(self.handleTableListing)
@@ -46,6 +48,13 @@ class Main(QMainWindow, UiMainWindow):
         self.radioButton_hexbin.toggled.connect(self.handleHexbinRadioButton)
 
         self.checkBox_groupBy.stateChanged.connect(self.handleGroupByCheckBox)
+
+        self.subwindow.setWindowIcon(QIcon(QPixmap(1, 1)))
+        self.subwindow_2.setWindowIcon(QIcon(QPixmap(1, 1)))
+        self.mdiArea.addSubWindow(self.subwindow)
+        self.mdiArea.addSubWindow(self.subwindow_2)
+        self.subwindow.setWindowTitle("Plot")
+        self.subwindow_2.setWindowTitle("5 first rows of the result table:")
 
     def handleFileChoose(self):
         try:
@@ -102,10 +111,12 @@ class Main(QMainWindow, UiMainWindow):
         if hasattr(self, 'df'):
             if not self.isTableListingClicked:
                 self.pushButton_tableListing.setText('Small Table Listing')
+                self.subwindow_2.setWindowTitle("All rows of the result table:")
                 self.toTableView(self.df)
                 self.isTableListingClicked = True
             else:
                 self.pushButton_tableListing.setText('Full Table Listing')
+                self.subwindow_2.setWindowTitle("5 first rows of the result table:")
                 self.toTableView(self.df.head())
                 self.isTableListingClicked = False
 
@@ -194,10 +205,19 @@ class Main(QMainWindow, UiMainWindow):
         self.tableView_table.setModel(self.model)
 
     def toWidgetPlot(self, plot):
-        self.user_plot = plot
+        # HERE WE CAN CHANGE PLOT STYLE LIKE GRID, AXIS AND ETC.
+        # User's plot located in plot
+        plot.grid()
+
         try:
             self.label_Error.setText('')
             fig = plot.get_figure()
+            # FOR TESTING PROPOSES #
+            ax = fig.gca()
+            ax.autoscale(enable=False, tight=False)
+            ax.autoscale_view(tight=False, scalex=False, scaley=False)
+            # FOR TESTING PROPOSES #
+
             main.changefig(fig)
         except Exception as ex:
             self.label_Error.setText('Error: ' + str(ex))
@@ -299,7 +319,7 @@ class Main(QMainWindow, UiMainWindow):
                             self.toWidgetPlot(self.df.plot(kind='bar'))
 
                     elif self.radioButton_scatter.isChecked():
-                        self.toWidgetPlot(self.df.plot.scatter(x_str, y_str))
+                        self.toWidgetPlot(self.df.plot.scatter(x_str, y_str, xticks=self.df[x_str],  yticks=self.df[y_str], rot=90))
 
                     elif self.radioButton_area.isChecked():
                         self.toWidgetPlot(self.df.plot.area(x_str, y_str))

@@ -4,10 +4,10 @@ from PyQt5.QtCore import Qt
 class Editor(QtWidgets.QDialog):
     def __init__(self, parent = None):
         QtWidgets.QDialog.__init__(self, parent)
-        
+
         self.parent = parent
         self.initUI()
-    
+
     def initUI(self):
         loadButton = QtWidgets.QPushButton("Load", self)
         loadButton.setStyleSheet('font: 14px')
@@ -20,6 +20,7 @@ class Editor(QtWidgets.QDialog):
         self.codeEditorField = QtWidgets.QTextEdit(self)
         self.codeEditorField.resize(250, 50)
         self.codeEditorField.setStyleSheet('font: 14px; font-family: "Courier New"')
+        self.codeEditorField.setTabStopWidth(4 * 4 * 2)
 
         layout = QtWidgets.QGridLayout()
 
